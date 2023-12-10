@@ -1,0 +1,660 @@
+{
+	"info": {
+		"_postman_id": "56cb37db-3e7b-4558-9cb5-4b9a8d9b76f1",
+		"name": "Tasks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "28798981-56cb37db-3e7b-4558-9cb5-4b9a8d9b76f1"
+	},
+	"item": [
+		{
+			"name": "Positive",
+			"item": [
+				{
+					"name": "authorization like admin Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e2cfde2f-11fd-47f7-8a30-1aae33aac219",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check token\", () => {\r",
+									"  pm.response.to.have.jsonBody('id_token');\r",
+									"\r",
+									"  const token = pm.response.json().id_token;\r",
+									"\r",
+									"  pm.expect(token).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"const response=pm.response.json()\r",
+									"\r",
+									"pm.environment.set(\"adminToken\", response.id_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "4c6c3e4d-0340-437d-9b09-db1a92f4c9bd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"admin\",\r\n  \"rememberMe\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/authenticate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "activated user 3 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed04e7f5-ad00-4142-a1c3-194019e6b2bf",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Проверка наличия токена пользователя\", function () {\r",
+									"    var responseBody = pm.response.json();\r",
+									"    pm.expect(responseBody).to.have.property(\"id_token\");\r",
+									"    pm.expect(responseBody.id_token).not.to.be.empty;\r",
+									"});\r",
+									"const response=pm.response.json()\r",
+									"\r",
+									"pm.environment.set(\"user3Token\", response.id_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "60415ed1-eca1-4a59-b586-e73d2b31ef1f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user3Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"kot\",\r\n  \"password\": \"654321\",\r\n  \"rememberMe\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/authenticate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create task -admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73a99672-0e16-478a-9013-30e4bc2a6808",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "862cfe48-680f-4cd0-945b-b50f1e70f784",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"text\": \"do you like listening music\",\r\n  \"answer\": \"yes\",\r\n  \"title\": \"music\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create task- user3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73a99672-0e16-478a-9013-30e4bc2a6808",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "abe36e86-a9fe-4566-b39f-8c02d3a281eb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user3Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"text\": \"let's think about it\",\r\n  \"answer\": \"888\",\r\n  \"title\": \"philosophy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user-task by admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73a99672-0e16-478a-9013-30e4bc2a6808",
+								"exec": [
+									"\r",
+									"pm.test(\"Status code name has string\", function () {\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "0b815b42-15ac-4706-80e5-7248f3ec72f3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isSolved\": true,\r\n    \"user\": {\r\n        \"id\": 1032,\r\n        \"login\": \"katya2\"\r\n    },\r\n    \"task\": {\r\n        \"id\": 1863,\r\n        \"text\": \"GB\",\r\n        \"answer\": \"AI\",\r\n        \"title\": \"FTP\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user-tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user-tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user-task by user3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73a99672-0e16-478a-9013-30e4bc2a6808",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"task\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "b6a7f203-fa2b-480a-a4d8-df45d19dbe4b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user3Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isSolved\": true,\r\n    \"user\": {\r\n        \"id\": 1051,\r\n        \"login\": \"milana\"\r\n    },\r\n    \"task\": {\r\n        \"id\": 5311,\r\n        \"text\": \"do you like listening music\",\r\n        \"answer\": \"yes\",\r\n        \"title\": \"music\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user-tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user-tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change task admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c2693e07-5ce1-487d-9f0e-aa9e2fb31993",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"to be sure2\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "1ce9fcb5-92cb-41e0-ad4d-70ed942f7fb7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 1852,\r\n  \"text\": \"To be or not to be\",\r\n  \"answer\": \"to be sure2\",\r\n  \"title\": \"philosophy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/1852",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"1852"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find task by user with id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b869efe0-167f-483d-b242-dad6b680b6c5",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var schema = {\r",
+									"    \"items\": {\r",
+									"        \"type\": \"boolean\"\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"answer\",\"ok\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "2061b381-b968-4af1-837d-014446703587",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user3Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/1601",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"1601"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "25465695-0551-4a9f-85d8-b02979917104"
+		},
+		{
+			"name": "Negative",
+			"item": [
+				{
+					"name": "Delete task user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74e5b37e-6f79-4c58-af5a-c4a92e8cc0e6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "6c7ab9b3-d03f-4043-93d2-e7372d69b66e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user3Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/user-tasks/1601",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user-tasks",
+								"1601"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete task admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74e5b37e-6f79-4c58-af5a-c4a92e8cc0e6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "92e6e2f5-2e19-4cda-8fc9-8cbfbcd64a1e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/1851",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"1851"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "20dc5d00-99d0-4dfc-bd96-36a69906c307"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "dd253593-faee-43ef-9687-3ba026d3fa6a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f9082e3d-2ae7-4d91-88b3-abb733ac785a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "76bb29eb-92ec-4f59-bb1a-130e7519bb5b",
+			"key": "baseUrl",
+			"value": "https://sqlverifier-live-6e21ca0ed768.herokuapp.com"
+		},
+		{
+			"id": "c9f164de-215e-422e-bd76-b25957cf6006",
+			"key": "user3Token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
